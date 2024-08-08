@@ -84,6 +84,8 @@ builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IFootballerRequestsRepository, FootballerRequestsRepository>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+
 
 var app = builder.Build();
 
@@ -100,5 +102,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

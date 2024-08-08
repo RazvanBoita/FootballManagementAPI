@@ -14,5 +14,7 @@ public interface IAppUserRepository
     public void DeleteUser(AppUser appUser);
     public void DeleteUserById(int id);
     public void DeleteUserByUsername(string username);
-    
+
+    public bool ChangeUserRole(int userId, string newRole);
+
 }

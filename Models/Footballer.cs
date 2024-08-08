@@ -8,7 +8,7 @@ public class Footballer
     public int UserId { get; set; }
     public AppUser User { get; set; }
     public char PreferredFoot { get; set; }
-    public string Position { get; set; }
+    public FootballPosition Position { get; set; }
     [Range(1, 99)]
     public int ShirtNumber { get; set; }
     public int? TeamId { get; set; }

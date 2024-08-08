@@ -52,4 +52,24 @@ public class AppUserRepository : IAppUserRepository
         await _dbContext.Users.AddAsync(appUser);
         await _dbContext.SaveChangesAsync();
     }
+
+    public bool ChangeUserRole(int userId, string newRole)
+    {
+        var foundUser = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+        if (foundUser is null)
+        {
+            return false;
+        }
+
+        string[] roles = { "Footballer", "Coach", "Admin" };
+
+        if (!roles.Contains(newRole))
+        {
+            return false;
+        }
+        
+        foundUser.Role = newRole;
+        _dbContext.SaveChanges();
+        return true;
+    }
 }

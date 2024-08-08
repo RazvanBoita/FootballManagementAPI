@@ -12,7 +12,26 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
     {
         _dbContext = dbContext;
     }
-    
+
+    public IEnumerable<FootballerRequest> GetAllFootballerRequests()
+    {
+        return _dbContext.FootballerRequests.ToList();
+    }
+
+    public FootballerRequest GetFootballerRequestById(int id)
+    {
+        return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.Id == id);
+    }
+    public FootballerRequest GetFootballerRequestByUsername(string username)
+    {
+        return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.User.Username == username);
+    }
+
+    public FootballerRequest GetFootballerRequestByUserId(int userId)
+    {
+        return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.UserId == userId);
+    }
+
     public void InsertFootballerRequest(FootballerRequest footballerRequest)
     {
         _dbContext.FootballerRequests.Add(footballerRequest);
@@ -40,5 +59,31 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
     public bool CheckFootballerRequestExistence(FootballerRequest footballerRequest)
     {
         return _dbContext.FootballerRequests.Any(fr => fr.UserId == footballerRequest.UserId);
+    }
+
+    public bool DeleteFootballerRequestById(int userId)
+    {
+        var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.UserId == userId);
+        if (foundFootballerRequest is null)
+        {
+            return false;
+        }
+
+        _dbContext.FootballerRequests.Remove(foundFootballerRequest);
+        _dbContext.SaveChanges();
+        return true;
+    }
+
+    public bool DeleteFootballerRequestByUsername(string username)
+    {
+        var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.User.Username == username);
+        if (foundFootballerRequest is null)
+        {
+            return false;
+        }
+
+        _dbContext.FootballerRequests.Remove(foundFootballerRequest);
+        _dbContext.SaveChanges();
+        return true;
     }
 }
