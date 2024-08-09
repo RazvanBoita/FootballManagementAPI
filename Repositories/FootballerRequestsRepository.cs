@@ -61,29 +61,29 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
         return _dbContext.FootballerRequests.Any(fr => fr.UserId == footballerRequest.UserId);
     }
 
-    public bool DeleteFootballerRequestById(int userId)
+    public (bool, string) DeleteFootballerRequestById(int userId)
     {
         var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.UserId == userId);
         if (foundFootballerRequest is null)
         {
-            return false;
+            return (false, $"Could not find footballer request for footballer with id: {userId}");
         }
 
         _dbContext.FootballerRequests.Remove(foundFootballerRequest);
         _dbContext.SaveChanges();
-        return true;
+        return (true, "Ok");
     }
 
-    public bool DeleteFootballerRequestByUsername(string username)
+    public (bool, string) DeleteFootballerRequestByUsername(string username)
     {
         var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.User.Username == username);
         if (foundFootballerRequest is null)
         {
-            return false;
+            return (false, $"Could not find footballer request fot footballer username: {username}");
         }
 
         _dbContext.FootballerRequests.Remove(foundFootballerRequest);
         _dbContext.SaveChanges();
-        return true;
+        return (true, "Ok");
     }
 }

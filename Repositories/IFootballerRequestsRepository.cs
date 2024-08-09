@@ -14,6 +14,6 @@ public interface IFootballerRequestsRepository
     public bool CheckFootballerRequestExistence(int userId);
     public bool CheckFootballerRequestExistence(FootballerRequest footballerRequest);
 
-    public bool DeleteFootballerRequestById(int userId);
-    public bool DeleteFootballerRequestByUsername(string username);
+    public (bool, string) DeleteFootballerRequestById(int userId);
+    public (bool, string) DeleteFootballerRequestByUsername(string username);
 }

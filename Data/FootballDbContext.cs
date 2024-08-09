@@ -14,6 +14,7 @@ public class FootballDbContext : DbContext
     public DbSet<Admin> Admins { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<FootballerRequest> FootballerRequests { get; set; }
+    public DbSet<CoachRequest> CoachRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +54,12 @@ public class FootballDbContext : DbContext
             .HasOne(fr => fr.User)
             .WithMany(u => u.FootballerRequests)
             .HasForeignKey(fr => fr.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<CoachRequest>()
+            .HasOne(cr => cr.User)
+            .WithMany(u => u.CoachRequests)
+            .HasForeignKey(cr => cr.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -9,4 +9,9 @@ public interface IPromotionService
         FootballerDto footballerDto);
 
     public (bool Success, string Message) PerformFootballerPromotion(FootballerRequest footballerRequest);
+    
+    public (bool Success, string Message) CoachRequestPromotion(HttpContext httpContext,
+        CoachDto coachDto);
+
+    public (bool Success, string Message) PerformCoachPromotion(CoachRequest coachRequest);
 }

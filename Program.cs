@@ -81,11 +81,12 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IFootballerRepository, FootballerRepository>();
+builder.Services.AddScoped<ICoachRepository, CoachRepository>();
 builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IFootballerRequestsRepository, FootballerRequestsRepository>();
+builder.Services.AddScoped<ICoachRequestsRepository, CoachRequestsRepository>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-
+builder.Services.AddScoped<IRequestService, RequestService>();
 
 var app = builder.Build();
 

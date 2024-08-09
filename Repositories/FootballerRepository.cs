@@ -19,14 +19,14 @@ public class FootballerRepository : IFootballerRepository
 
     public bool FootballerExistsById(int id)
     {
-        return _dbContext.Footballers.Any(f => f.Id == id);
+        return _dbContext.Footballers.Any(f => f.UserId == id);
     }
 
     public bool InsertFootballer(FootballerRequest footballerRequest)
     {
         //TODO get team id for the teamName
         var teamId = _dbContext.Teams.FirstOrDefault(t => t.Name == footballerRequest.TeamName)?.Id;
-        if (teamId == 0)
+        if (teamId == 0 || teamId == null)
         {
             return false;
         }
