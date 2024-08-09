@@ -1,4 +1,5 @@
 using System.Runtime.ExceptionServices;
+using System.Security.Claims;
 using FootballMgm.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,7 +9,6 @@ namespace FootballMgm.Api.Controllers;
 
 [ApiController]
 [Route("api/requests")]
-[Authorize(Policy = "RequireAdminRole")]
 public class RequestController : ControllerBase
 {
     private readonly IRequestService _requestService;
@@ -21,6 +21,7 @@ public class RequestController : ControllerBase
     
     
     //TODO START FOOTBALLERS
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet]
     [Route("footballers")]
     public IActionResult GetAllFootballerRequests()
@@ -28,8 +29,7 @@ public class RequestController : ControllerBase
         return Ok(_requestService.GetAllFootballerRequests());
     }
 
-    
-    
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("footballers/{userId:int}")]
     public IActionResult GetFootballerRequestById(int userId)
     {
@@ -42,7 +42,7 @@ public class RequestController : ControllerBase
     }
 
     
-    
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("footballers/{username}")]
     public IActionResult GetFootballerRequestByUsername(string username)
     {
@@ -50,7 +50,7 @@ public class RequestController : ControllerBase
     }
     
     
-
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("footballers/{id:int}")]
     public IActionResult DeleteFootballerRequest(int id)
     {
@@ -63,6 +63,7 @@ public class RequestController : ControllerBase
         return NotFound($"No footballer with id {id} found.");
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("footballers/{username}")]
     public IActionResult DeleteFootballerRequest(string username)
     {
@@ -75,10 +76,15 @@ public class RequestController : ControllerBase
         return NotFound($"No footballer with name {username} found.");
     }
 
+    [Authorize(Policy = "RequireAdminOrCoachRole")]
     [HttpPut("footballers/{userId:int}")]
     public IActionResult PromoteUserToFootballer(int userId)
     {
-        var (result, message) = _promotionService.PerformFootballerPromotion(_requestService.GetFootballerRequestById(userId));
+        if (_requestService.GetFootballerRequestById(userId) is null)
+        {
+            return BadRequest($"No footballer request found for user id: {userId}");
+        }
+        var (result, message) = _promotionService.PerformFootballerPromotion(HttpContext, _requestService.GetFootballerRequestById(userId));
         if (!result)
         {
             return BadRequest(message);
@@ -93,12 +99,14 @@ public class RequestController : ControllerBase
     
     
     //TODO START COACHES
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("coaches")]
     public IActionResult GetAllCoachRequests()
     {
         return Ok(_requestService.GetAllCoachRequests());
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("coaches/{userId:int}")]
     public IActionResult GetCoachRequestById(int userId)
     {
@@ -110,12 +118,14 @@ public class RequestController : ControllerBase
         return Ok(_requestService.GetCoachRequestById(userId));
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("coaches/{username}")]
     public IActionResult GetCoachRequestByUsername(string username)
     {
         return Ok(_requestService.GetCoachRequestByUsername(username));
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("coaches/{id:int}")]
     public IActionResult DeleteCoachRequest(int id)
     {
@@ -128,6 +138,7 @@ public class RequestController : ControllerBase
         return NotFound($"No coach with id {id} found.");
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("coaches/{username}")]
     public IActionResult DeleteCoachRequest(string username)
     {
@@ -140,6 +151,7 @@ public class RequestController : ControllerBase
         return NotFound($"No coach with name {username} found.");
     }   
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPut("coaches/{userId:int}")]
     public IActionResult PromoteUserToCoach(int userId)
     {

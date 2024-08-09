@@ -49,8 +49,33 @@ public class PromotionService : IPromotionService
         return (true, $"User with id {uid} completed a footballer request successfully!");
     }
 
-    public (bool Success, string Message) PerformFootballerPromotion(FootballerRequest footballerRequest)
+    public (bool Success, string Message) PerformFootballerPromotion(HttpContext httpContext, FootballerRequest footballerRequest)
     {
+        if (footballerRequest is null)
+        {
+            
+        }
+        //TODO vezi daca e coach, poate sa faca treaba asta doar daca e din aceeasi echipa cu requestul
+        var userDoingPromotionId = Convert.ToInt32(httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        if (_coachRepository.CoachExistsById(userDoingPromotionId))
+        {
+            var coach = _coachRepository.GetCoachById(userDoingPromotionId);
+            if (coach is null)
+            {
+                return (false, "No coach with given id");
+            }
+            
+            var coachTeam = _teamRepository.GetTeamNameById(coach.TeamId ?? 0);
+            if (coachTeam.Equals("empty"))
+            {
+                return (false, "No team found");
+            }
+
+            if (!coachTeam.Equals(footballerRequest.TeamName))
+            {
+                return (false, "Coach can only promote footballers belonging to their clubs");
+            }
+        }
         try
         {
             var resultToFootballerInsertion = _footballerRepository.InsertFootballer(footballerRequest);

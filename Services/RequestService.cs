@@ -23,7 +23,7 @@ public class RequestService : IRequestService
 
     public FootballerRequest GetFootballerRequestById(int userId)
     {
-        return _footballerRequestsRepository.GetFootballerRequestByUserId(userId);
+        return _footballerRequestsRepository.GetFootballerRequestByUserId(userId) ?? null;
     }
 
     public FootballerRequest GetFootballerRequestByUsername(string username)

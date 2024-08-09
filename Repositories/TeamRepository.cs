@@ -14,4 +14,15 @@ public class TeamRepository : ITeamRepository
     {
         return _dbContext.Teams.Any(t => string.Equals(t.Name.ToLower(),teamName.ToLower()));
     }
+
+    public string GetTeamNameById(int id)
+    {
+        var team =  _dbContext.Teams.Find(id)?.Name;
+        if (team is null)
+        {
+            return "empty";
+        }
+
+        return team;
+    }
 }

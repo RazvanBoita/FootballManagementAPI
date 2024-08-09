@@ -73,6 +73,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireCoachRole", policy => policy.RequireRole("Coach", "Admin"));
     options.AddPolicy("RequireFootballerRole", policy => policy.RequireRole("Footballer", "Admin"));
     options.AddPolicy("RequireBaseRole", policy => policy.RequireRole("Base"));
+    options.AddPolicy("RequireAdminOrCoachRole", policy =>
+        policy.RequireAssertion(context => 
+            context.User.IsInRole("Admin") || 
+            context.User.IsInRole("Coach")));
+    
     //Pt RequireFootballerRole le am pe toate pt ca orice face un fotbalist, poate face si un admin.
     //Same pt RequireCoachRole
 });
