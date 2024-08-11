@@ -8,4 +8,5 @@ public class Team
     public string Name { get; set; }
     public Coach Coach { get; set; }
     public ICollection<Footballer> Footballers { get; set; }
+    public ICollection<Announcement> Announcements { get; set; }
 }

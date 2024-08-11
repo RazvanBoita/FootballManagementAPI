@@ -1,7 +1,9 @@
 using System.Text;
 using FootballMgm.Api.Data;
 using FootballMgm.Api.Repositories;
+using FootballMgm.Api.Repositories.Announcement;
 using FootballMgm.Api.Services;
+using FootballMgm.Api.Services.Announcement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.EnableAnnotations();
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -77,11 +80,17 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAssertion(context => 
             context.User.IsInRole("Admin") || 
             context.User.IsInRole("Coach")));
+    options.AddPolicy("RequireFootballerOrCoachRole", policy =>
+        policy.RequireAssertion(context => 
+            context.User.IsInRole("Footballer") || 
+            context.User.IsInRole("Coach")));
     
     //Pt RequireFootballerRole le am pe toate pt ca orice face un fotbalist, poate face si un admin.
     //Same pt RequireCoachRole
 });
 
+
+//TODO Signing services for DI
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
@@ -92,6 +101,9 @@ builder.Services.AddScoped<IFootballerRequestsRepository, FootballerRequestsRepo
 builder.Services.AddScoped<ICoachRequestsRepository, CoachRequestsRepository>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
+builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+
 
 var app = builder.Build();
 

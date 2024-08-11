@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FootballMgm.Api.Models;
 using FootballMgm.Api.Validators.FootballValidators;
 

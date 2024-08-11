@@ -15,7 +15,7 @@ public class FootballDbContext : DbContext
     public DbSet<Team> Teams { get; set; }
     public DbSet<FootballerRequest> FootballerRequests { get; set; }
     public DbSet<CoachRequest> CoachRequests { get; set; }
-
+    public DbSet<Announcement> Announcements { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Footballer>()
@@ -60,6 +60,20 @@ public class FootballDbContext : DbContext
             .HasOne(cr => cr.User)
             .WithMany(u => u.CoachRequests)
             .HasForeignKey(cr => cr.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        
+        //TODO 2 metode diferite de a configura one-to-many intre announcement si team
+        // modelBuilder.Entity<Announcement>()
+        //     .HasOne(a => a.Team)
+        //     .WithMany(t => t.Announcements)
+        //     .HasForeignKey(a => a.TeamId)
+        //     .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Team>()
+            .HasMany(t => t.Announcements)
+            .WithOne(a => a.Team)
+            .HasForeignKey(a => a.TeamId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

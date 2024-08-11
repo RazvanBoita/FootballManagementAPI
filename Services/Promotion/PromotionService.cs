@@ -51,10 +51,6 @@ public class PromotionService : IPromotionService
 
     public (bool Success, string Message) PerformFootballerPromotion(HttpContext httpContext, FootballerRequest footballerRequest)
     {
-        if (footballerRequest is null)
-        {
-            
-        }
         //TODO vezi daca e coach, poate sa faca treaba asta doar daca e din aceeasi echipa cu requestul
         var userDoingPromotionId = Convert.ToInt32(httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         if (_coachRepository.CoachExistsById(userDoingPromotionId))

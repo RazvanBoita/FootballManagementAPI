@@ -8,4 +8,5 @@ public interface IFootballerRepository
     public bool FootballerExistsById(int id);
 
     public bool InsertFootballer(FootballerRequest footballer);
+    public Footballer GetFootballerById(int id);
 }
