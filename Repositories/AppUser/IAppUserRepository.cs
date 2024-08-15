@@ -7,7 +7,7 @@ namespace FootballMgm.Api.Repositories;
 public interface IAppUserRepository
 {
     public AppUser GetUserById(int id);
-    public AppUser GetUserByUsername(string username);
+    public AppUser? GetUserByUsername(string username);
     public IEnumerable<AppUser> GetAllUsers();
     public void InsertUser(AppUser appUser);
     public Task InsertUserAsync(AppUser appUser);

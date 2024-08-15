@@ -12,7 +12,7 @@ public class CoachRepository : ICoachRepository
         _dbContext = dbContext;
     }
 
-    public Coach GetCoachById(int id)
+    public Coach? GetCoachById(int id)
     {
         return _dbContext.Coaches.FirstOrDefault(c => c.UserId == id);
     }

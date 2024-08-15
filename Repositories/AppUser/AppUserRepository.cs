@@ -16,7 +16,7 @@ public class AppUserRepository : IAppUserRepository
         return _dbContext.Users.Find(id);
     }
 
-    public AppUser GetUserByUsername(string username)
+    public AppUser? GetUserByUsername(string username)
     {
         return _dbContext.Users.FirstOrDefault(u => u.Username == username);
     }

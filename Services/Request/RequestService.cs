@@ -21,24 +21,34 @@ public class RequestService : IRequestService
         return _footballerRequestsRepository.GetAllFootballerRequests();
     }
 
-    public FootballerRequest GetFootballerRequestById(int userId)
+    public FootballerRequest? GetFootballerRequestById(int userId)
     {
-        return _footballerRequestsRepository.GetFootballerRequestByUserId(userId) ?? null;
+        return _footballerRequestsRepository.GetFootballerRequestByUserId(userId);
     }
 
-    public FootballerRequest GetFootballerRequestByUsername(string username)
+    public FootballerRequest? GetFootballerRequestByUsername(string username)
     {
         return _footballerRequestsRepository.GetFootballerRequestByUsername(username);
     }
 
     public bool DeleteFootballerRequestById(int id)
     {
-        return _footballerRequestsRepository.DeleteFootballerRequestById(id).Item1;
+        var foundFootballerRequest = _footballerRequestsRepository.GetFootballerRequestById(id);
+        if (foundFootballerRequest is null)
+        {
+            return false;
+        }
+        return _footballerRequestsRepository.DeleteFootballerRequestById(foundFootballerRequest);
     }
 
     public bool DeleteFootballerRequestByUsername(string username)
     {
-        return _footballerRequestsRepository.DeleteFootballerRequestByUsername(username).Item1;
+        var foundFootballerRequest = _footballerRequestsRepository.GetFootballerRequestByUsername(username);
+        if (foundFootballerRequest is null)
+        {
+            return false;
+        }
+        return _footballerRequestsRepository.DeleteFootballerRequestByUsername(foundFootballerRequest);
     }
     //TODO END FOOTBALLERS
     

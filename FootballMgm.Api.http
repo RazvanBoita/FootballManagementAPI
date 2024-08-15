@@ -1,3 +1,9 @@
+POST http://localhost:80/api/item
+Content-Type: application/json
+
+{}
+
+###
 @FootballMgm.Api_HostAddress = http://localhost:5120
 
 GET {{FootballMgm.Api_HostAddress}}/weatherforecast/

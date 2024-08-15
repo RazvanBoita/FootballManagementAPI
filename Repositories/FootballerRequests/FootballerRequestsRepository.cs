@@ -18,16 +18,16 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
         return _dbContext.FootballerRequests.ToList();
     }
 
-    public FootballerRequest GetFootballerRequestById(int id)
+    public FootballerRequest? GetFootballerRequestById(int id)
     {
         return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.Id == id);
     }
-    public FootballerRequest GetFootballerRequestByUsername(string username)
+    public FootballerRequest? GetFootballerRequestByUsername(string username)
     {
         return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.User.Username == username);
     }
 
-    public FootballerRequest GetFootballerRequestByUserId(int userId)
+    public FootballerRequest? GetFootballerRequestByUserId(int userId)
     {
         return _dbContext.FootballerRequests.FirstOrDefault(fr => fr.UserId == userId);
     }
@@ -61,29 +61,33 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
         return _dbContext.FootballerRequests.Any(fr => fr.UserId == footballerRequest.UserId);
     }
 
-    public (bool, string) DeleteFootballerRequestById(int userId)
+    public bool DeleteFootballerRequestById(FootballerRequest foundFootballerRequest)
     {
-        var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.UserId == userId);
-        if (foundFootballerRequest is null)
+        try
         {
-            return (false, $"Could not find footballer request for footballer with id: {userId}");
+            _dbContext.FootballerRequests.Remove(foundFootballerRequest);
+            _dbContext.SaveChanges();
         }
-
-        _dbContext.FootballerRequests.Remove(foundFootballerRequest);
-        _dbContext.SaveChanges();
-        return (true, "Ok");
+        catch (Exception e)
+        {
+            return false;
+        }
+        
+        return true;
     }
 
-    public (bool, string) DeleteFootballerRequestByUsername(string username)
+    public bool DeleteFootballerRequestByUsername(FootballerRequest foundFootballerRequest)
     {
-        var foundFootballerRequest = _dbContext.FootballerRequests.FirstOrDefault(fr => fr.User.Username == username);
-        if (foundFootballerRequest is null)
+        try
         {
-            return (false, $"Could not find footballer request fot footballer username: {username}");
+            _dbContext.FootballerRequests.Remove(foundFootballerRequest);
+            _dbContext.SaveChanges();
         }
-
-        _dbContext.FootballerRequests.Remove(foundFootballerRequest);
-        _dbContext.SaveChanges();
-        return (true, "Ok");
+        catch (Exception e)
+        {
+            return false;
+        }
+        
+        return true;
     }
 }

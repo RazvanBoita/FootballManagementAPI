@@ -55,6 +55,10 @@ public class AnnouncementService : IAnnouncementService
     public (int, string, IEnumerable<Models.Announcement>?) GetAnnouncements(HttpContext httpContext)
     {
         var userId = Convert.ToInt32(httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        if (userId == 0)
+        {
+            return (400, "User making the request couldn't be found", null);
+        }
         var maybeCoach = _coachRepository.GetCoachById(userId);
         var maybeFootballer = _footballerRepository.GetFootballerById(userId);
         var finalTeamId = 0;

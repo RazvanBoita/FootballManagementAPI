@@ -76,16 +76,16 @@ public class PromotionService : IPromotionService
         {
             var resultToFootballerInsertion = _footballerRepository.InsertFootballer(footballerRequest);
             var resultToRequestDeletion =
-                _footballerRequestsRepository.DeleteFootballerRequestById(footballerRequest.UserId);
+                _footballerRequestsRepository.DeleteFootballerRequestById(footballerRequest);
             var resultToRoleChange = _appUserRepository.ChangeUserRole(footballerRequest.UserId, "Footballer");
             if (resultToFootballerInsertion is false)
             {
                 return (false, "Error: Inserting a footballer");
             }
             
-            if (resultToRequestDeletion.Item1 is false)
+            if (resultToRequestDeletion is false)
             {
-                return resultToRequestDeletion;
+                return (resultToRequestDeletion, "Error: Deleting a footballer request");
             }
             
             if (resultToRoleChange is false)

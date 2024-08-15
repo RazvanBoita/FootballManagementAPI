@@ -54,7 +54,7 @@ public class FootballerRepository : IFootballerRepository
         return true;
     }
 
-    public Footballer GetFootballerById(int id)
+    public Footballer? GetFootballerById(int id)
     {
         return _dbContext.Footballers.FirstOrDefault(f => f.UserId == id);
     }

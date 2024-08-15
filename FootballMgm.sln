@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballMgm.Api", "FootballMgm.Api.csproj", "{582D5CBC-AF33-489E-AF1F-858702EE19C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballMgm.UnitTests", "FootballMgm.UnitTests\FootballMgm.UnitTests.csproj", "{4DF3584D-382B-49D7-935E-05F9E9FF084F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{582D5CBC-AF33-489E-AF1F-858702EE19C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{582D5CBC-AF33-489E-AF1F-858702EE19C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{582D5CBC-AF33-489E-AF1F-858702EE19C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DF3584D-382B-49D7-935E-05F9E9FF084F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DF3584D-382B-49D7-935E-05F9E9FF084F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DF3584D-382B-49D7-935E-05F9E9FF084F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DF3584D-382B-49D7-935E-05F9E9FF084F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

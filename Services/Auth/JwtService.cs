@@ -15,7 +15,7 @@ public class JwtService
         _configuration = configuration;
     }
 
-    public string GenerateToken(AppUser user)
+    public string GenerateToken(AppUser? user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
