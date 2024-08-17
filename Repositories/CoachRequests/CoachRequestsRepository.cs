@@ -18,26 +18,21 @@ public class CoachRequestsRepository : ICoachRequestsRepository
         return _dbContext.CoachRequests.ToList();
     }
 
-    public CoachRequest GetCoachRequestByUserId(int userId)
+    public CoachRequest? GetCoachRequestByUserId(int userId)
     {
         return _dbContext.CoachRequests.FirstOrDefault(cr => cr.UserId == userId);
     }
 
-    public CoachRequest GetCoachRequestByUsername(string username)
+    public CoachRequest? GetCoachRequestByUsername(string username)
     {
         return _dbContext.CoachRequests.FirstOrDefault(cr => cr.User.Username == username);
     }
 
-    public bool InsertCoachRequest(int userId, CoachDto coachDto)
+    public bool InsertCoachRequest(CoachRequest coachRequest)
     {
         try
         {
-            _dbContext.CoachRequests.Add(new CoachRequest
-            {
-                UserId = userId,
-                XpYears = coachDto.XpYears,
-                TeamName = coachDto.TeamName
-            });
+            _dbContext.CoachRequests.Add(coachRequest);
             _dbContext.SaveChanges();
         }
         catch (Exception e)
@@ -56,13 +51,16 @@ public class CoachRequestsRepository : ICoachRequestsRepository
     public (bool, string) DeleteCoachRequestById(int userId)
     {
         var foundCoachRequest = _dbContext.CoachRequests.FirstOrDefault(cr => cr.UserId == userId);
-        if (foundCoachRequest is null)
-        {
-            return (false, $"Could not find coach request for coach with id {userId}");
-        }
 
-        _dbContext.CoachRequests.Remove(foundCoachRequest);
-        _dbContext.SaveChanges();
+        try
+        {
+            _dbContext.CoachRequests.Remove(foundCoachRequest!);
+            _dbContext.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            return (false, e.Message);
+        }
         
         return (true, "Ok");
     }
@@ -70,13 +68,15 @@ public class CoachRequestsRepository : ICoachRequestsRepository
     public (bool, string) DeleteCoachRequestByUsername(string username)
     {
         var foundCoachRequest = _dbContext.CoachRequests.FirstOrDefault(cr => cr.User.Username == username);
-        if (foundCoachRequest is null)
+        try
         {
-            return (false, $"Could not find coach request for coach with username {username}");
+            _dbContext.CoachRequests.Remove(foundCoachRequest!);
+            _dbContext.SaveChanges();
         }
-        
-        _dbContext.CoachRequests.Remove(foundCoachRequest);
-        _dbContext.SaveChanges();
+        catch (Exception e)
+        {
+            return (false, e.Message);
+        }
         
         return (true, "Ok");
     }

@@ -10,7 +10,6 @@ public interface IFootballerRequestsRepository
     public FootballerRequest? GetFootballerRequestByUserId(int userId);
     public FootballerRequest? GetFootballerRequestByUsername(string username);
     public void InsertFootballerRequest(FootballerRequest footballerRequest);
-    public void InsertFootballerRequest(int userId, FootballerDto footballerDto);
     public bool CheckFootballerRequestExistence(int userId);
     public bool CheckFootballerRequestExistence(FootballerRequest footballerRequest);
 

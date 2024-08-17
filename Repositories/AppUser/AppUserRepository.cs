@@ -11,7 +11,7 @@ public class AppUserRepository : IAppUserRepository
         _dbContext = dbContext;
     }
 
-    public AppUser GetUserById(int id)
+    public AppUser? GetUserById(int id)
     {
         return _dbContext.Users.Find(id);
     }
@@ -56,20 +56,21 @@ public class AppUserRepository : IAppUserRepository
     public bool ChangeUserRole(int userId, string newRole)
     {
         var foundUser = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
-        if (foundUser is null)
-        {
-            return false;
-        }
-
         string[] roles = { "Footballer", "Coach", "Admin" };
-
+        
         if (!roles.Contains(newRole))
         {
             return false;
         }
-        
-        foundUser.Role = newRole;
-        _dbContext.SaveChanges();
+        try
+        {
+            foundUser!.Role = newRole;
+            _dbContext.SaveChanges();
+        }
+        catch (Exception)
+        {
+            return false;
+        }
         return true;
     }
 }

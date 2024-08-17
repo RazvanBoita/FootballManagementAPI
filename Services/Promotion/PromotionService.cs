@@ -39,7 +39,15 @@ public class PromotionService : IPromotionService
         
         try
         {
-            _footballerRequestsRepository.InsertFootballerRequest(uid, footballerDto);
+            var footballerRequest = new FootballerRequest
+            {
+                UserId = uid,
+                Position = footballerDto.Position,
+                PrefferedFoot = footballerDto.PrefferedFoot,
+                ShirtNumber = footballerDto.ShirtNumber,
+                TeamName = footballerDto.TeamName
+            };
+            _footballerRequestsRepository.InsertFootballerRequest(footballerRequest);
         }
         catch(Exception e)
         {
@@ -62,7 +70,7 @@ public class PromotionService : IPromotionService
             }
             
             var coachTeam = _teamRepository.GetTeamNameById(coach.TeamId ?? 0);
-            if (coachTeam.Equals("empty"))
+            if (coachTeam is null)
             {
                 return (false, "No team found");
             }
@@ -72,12 +80,37 @@ public class PromotionService : IPromotionService
                 return (false, "Coach can only promote footballers belonging to their clubs");
             }
         }
+        
+        
+        //TODO verifica fotbalistul daca are team id ok si daca exista
+
+        if (_appUserRepository.GetUserById(footballerRequest.UserId) is null)
+        {
+            return (false, "No user found");
+        }
+        
+        if (_footballerRepository.GetTeamIdForFootballer(footballerRequest.UserId) is null)
+        {
+            return (false, "User with given id doesn't have a team assigned.");
+        }
+        var footballerToAdd = new Footballer
+        {
+            UserId = footballerRequest.UserId,
+            Position = footballerRequest.Position,
+            PreferredFoot = footballerRequest.PrefferedFoot,
+            ShirtNumber = footballerRequest.ShirtNumber,
+            TeamId = _footballerRepository.GetTeamIdForFootballer(footballerRequest.UserId)
+        };
+        
         try
         {
-            var resultToFootballerInsertion = _footballerRepository.InsertFootballer(footballerRequest);
+            var resultToFootballerInsertion = _footballerRepository.InsertFootballer(footballerToAdd);
+            
             var resultToRequestDeletion =
                 _footballerRequestsRepository.DeleteFootballerRequestById(footballerRequest);
+            
             var resultToRoleChange = _appUserRepository.ChangeUserRole(footballerRequest.UserId, "Footballer");
+            
             if (resultToFootballerInsertion is false)
             {
                 return (false, "Error: Inserting a footballer");
@@ -112,9 +145,15 @@ public class PromotionService : IPromotionService
             return (result, message);
         }
         
+        var coachRequest = new CoachRequest()
+        {
+            UserId = uid,
+            XpYears = coachDto.XpYears,
+            TeamName = coachDto.TeamName
+        };
         try
         {
-            _coachRequestsRepository.InsertCoachRequest(uid, coachDto);
+            _coachRequestsRepository.InsertCoachRequest(coachRequest);
         }
         catch (Exception e)
         {
@@ -126,9 +165,26 @@ public class PromotionService : IPromotionService
 
     public (bool Success, string Message) PerformCoachPromotion(CoachRequest coachRequest)
     {
+        var foundCoachRequest = _coachRequestsRepository.GetCoachRequestByUserId(coachRequest.UserId);
+        if (foundCoachRequest is null)
+        {
+            return (false, "Coach request not found");
+        }
+
+        if (_coachRepository.GetTeamIdByCoachId(coachRequest.UserId) is null)
+        {
+            return (false, "Coach doesn't have a team");
+        }
+
+        var coachToAdd = new Coach()
+        {
+            UserId = coachRequest.UserId,
+            XpYears = coachRequest.XpYears,
+            TeamId = _coachRepository.GetTeamIdByCoachId(coachRequest.UserId)
+        };
         try
         {
-            var resultToCoachInsertion = _coachRepository.InsertCoach(coachRequest);
+            var resultToCoachInsertion = _coachRepository.InsertCoach(coachToAdd);
             var resultToRoleChange = _appUserRepository.ChangeUserRole(coachRequest.UserId, "Coach");
             var resultToRequestDeletion = _coachRequestsRepository.DeleteCoachRequestById(coachRequest.UserId);
             if (resultToCoachInsertion is false)

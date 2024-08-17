@@ -74,11 +74,22 @@ public class RequestService : IRequestService
 
     public bool DeleteCoachRequestById(int id)
     {
+        var foundCoachRequest = _coachRequestsRepository.GetCoachRequestByUserId(id);
+        if (foundCoachRequest is null)
+        {
+            return false;
+        }
         return _coachRequestsRepository.DeleteCoachRequestById(id).Item1;
     }
 
     public bool DeleteCoachRequestByUsername(string username)
     {
+        var foundCoachRequest = _coachRequestsRepository.GetCoachRequestByUsername(username);
+        if (foundCoachRequest is null)
+        {
+            return false;
+        }
+        
         return _coachRequestsRepository.DeleteCoachRequestByUsername(username).Item1;
     }
 

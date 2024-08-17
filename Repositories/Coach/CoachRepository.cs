@@ -27,22 +27,10 @@ public class CoachRepository : ICoachRepository
         return _dbContext.Coaches.Any(c => c.User.Username == username);
     }
 
-    public bool InsertCoach(CoachRequest coachRequest)
+    public bool InsertCoach(Coach coach)
     {
-        var teamId = _dbContext.Teams.FirstOrDefault(t => t.Name == coachRequest.TeamName)?.Id;
-        if (teamId == 0 || teamId == null)
-        {
-            return false;
-        }
-
         try
         {
-            var coach = new Coach
-            {
-                UserId = coachRequest.UserId,
-                XpYears = coachRequest.XpYears,
-                TeamId = teamId
-            };
             _dbContext.Coaches.Add(coach);
             _dbContext.SaveChanges();
         }
@@ -53,5 +41,10 @@ public class CoachRepository : ICoachRepository
         }
 
         return true;
+    }
+
+    public int? GetTeamIdByCoachId(int coachId)
+    {
+        return _dbContext.Coaches.FirstOrDefault(c => c.UserId == coachId)?.TeamId;
     }
 }

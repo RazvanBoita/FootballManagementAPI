@@ -7,6 +7,7 @@ public interface IFootballerRepository
     public bool FootballerExistsByName(string username);
     public bool FootballerExistsById(int id);
 
-    public bool InsertFootballer(FootballerRequest footballer);
+    public bool InsertFootballer(Footballer footballer);
     public Footballer? GetFootballerById(int id);
+    public int? GetTeamIdForFootballer(int footballerId);
 }

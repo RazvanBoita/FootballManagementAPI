@@ -22,27 +22,10 @@ public class FootballerRepository : IFootballerRepository
         return _dbContext.Footballers.Any(f => f.UserId == id);
     }
 
-    public bool InsertFootballer(FootballerRequest footballerRequest)
+    public bool InsertFootballer(Footballer footballer)
     {
-        //TODO get team id for the teamName
-        var teamId = _dbContext.Teams.FirstOrDefault(t => t.Name == footballerRequest.TeamName)?.Id;
-        if (teamId == 0 || teamId == null)
-        {
-            return false;
-        }
-
-        
         try
         {
-            var footballer = new Footballer
-            {
-                UserId = footballerRequest.UserId,
-                Position = footballerRequest.Position,
-                PreferredFoot = footballerRequest.PrefferedFoot,
-                ShirtNumber = footballerRequest.ShirtNumber,
-                TeamId = teamId
-            };
-            
             _dbContext.Footballers.Add(footballer);
             _dbContext.SaveChanges();
         }
@@ -57,5 +40,10 @@ public class FootballerRepository : IFootballerRepository
     public Footballer? GetFootballerById(int id)
     {
         return _dbContext.Footballers.FirstOrDefault(f => f.UserId == id);
+    }
+
+    public int? GetTeamIdForFootballer(int footballerId)
+    {
+        return _dbContext.Footballers.FirstOrDefault(f => f.UserId == footballerId)?.TeamId;
     }
 }

@@ -28,22 +28,20 @@ public class AnnouncementRepository : IAnnouncementRepository
         }
         return (true, "Announcement added");
     }
-
-    public bool DeleteAnnouncement(int id)
-    {
-        var foundAnnouncement = _dbContext.Announcements.Find(id);
-        if (foundAnnouncement is null)
-        {
-            return false;
-        }
-
-        _dbContext.Announcements.Remove(foundAnnouncement);
-        _dbContext.SaveChanges();
-        return true;
-    }
+    
 
     public IEnumerable<Models.Announcement> GetAllAnnouncements(int teamId)
     {
         return _dbContext.Announcements.Where(a => a.TeamId == teamId).ToList();
+    }
+
+    public Models.Announcement? GetAnnouncementById(int announcementId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool DeleteAnnouncement(Models.Announcement announcement)
+    {
+        throw new NotImplementedException();
     }
 }

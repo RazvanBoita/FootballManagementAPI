@@ -7,5 +7,6 @@ public interface ICoachRepository
     public Coach? GetCoachById(int id);
     public bool CoachExistsById(int id);
     public bool CoachExistsByUsername(string username);
-    public bool InsertCoach(CoachRequest coachRequest);
+    public bool InsertCoach(Coach coach);
+    public int? GetTeamIdByCoachId(int coachId);
 }

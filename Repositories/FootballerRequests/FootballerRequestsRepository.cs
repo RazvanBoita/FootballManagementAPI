@@ -37,19 +37,7 @@ public class FootballerRequestsRepository : IFootballerRequestsRepository
         _dbContext.FootballerRequests.Add(footballerRequest);
         _dbContext.SaveChanges();
     }
-
-    public void InsertFootballerRequest(int userId, FootballerDto footballerDto)
-    {
-        _dbContext.FootballerRequests.Add(new FootballerRequest
-        {
-            UserId = userId,
-            Position = footballerDto.Position,
-            PrefferedFoot = footballerDto.PrefferedFoot,
-            ShirtNumber = footballerDto.ShirtNumber,
-            TeamName = footballerDto.TeamName
-        });
-        _dbContext.SaveChanges();
-    }
+    
 
     public bool CheckFootballerRequestExistence(int userId)
     {
