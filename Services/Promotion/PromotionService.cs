@@ -43,7 +43,7 @@ public class PromotionService : IPromotionService
             {
                 UserId = uid,
                 Position = footballerDto.Position,
-                PrefferedFoot = footballerDto.PrefferedFoot,
+                PreferredFoot = footballerDto.PreferredFoot,
                 ShirtNumber = footballerDto.ShirtNumber,
                 TeamName = footballerDto.TeamName
             };
@@ -97,7 +97,7 @@ public class PromotionService : IPromotionService
         {
             UserId = footballerRequest.UserId,
             Position = footballerRequest.Position,
-            PreferredFoot = footballerRequest.PrefferedFoot,
+            PreferredFoot = footballerRequest.PreferredFoot,
             ShirtNumber = footballerRequest.ShirtNumber,
             TeamId = _footballerRepository.GetTeamIdForFootballer(footballerRequest.UserId)
         };

@@ -1,3 +1,4 @@
+using FluentValidation;
 using FootballMgm.Api.Dtos;
 using FootballMgm.Api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -10,18 +11,21 @@ namespace FootballMgm.Api.Controllers;
 public class CoachController : ControllerBase
 {
     private readonly IPromotionService _promotionService; 
-    public CoachController(IPromotionService promotionService)
+    private readonly IValidator<CoachDto> _coachValidator;
+    public CoachController(IPromotionService promotionService, IValidator<CoachDto> coachValidator)
     {
         _promotionService = promotionService;
+        _coachValidator = coachValidator;
     }
     
     [Authorize(Policy = "RequireBaseRole")]
     [HttpPost]
     public IActionResult RequestPromotion([FromBody] CoachDto coachDto)
     {
-        if (!ModelState.IsValid)
+        var validationResult = _coachValidator.Validate(coachDto);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Model state invalid");
+            return BadRequest(validationResult.Errors);
         }
 
         var (result, msg) = _promotionService.CoachRequestPromotion(HttpContext, coachDto);

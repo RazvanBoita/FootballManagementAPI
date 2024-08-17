@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using FluentValidation;
 using FootballMgm.Api.Dtos;
 using FootballMgm.Api.Repositories;
 using FootballMgm.Api.Services;
@@ -14,18 +15,21 @@ public class FootballerController : ControllerBase
 {
 
     private readonly IPromotionService _promotionService; 
-    public FootballerController(IPromotionService promotionService)
+    private readonly IValidator<FootballerDto> _footballerValidator;
+    public FootballerController(IPromotionService promotionService, IValidator<FootballerDto> footballerValidator)
     {
         _promotionService = promotionService;
+        _footballerValidator = footballerValidator;
     }
     
     [Authorize(Policy = "RequireBaseRole")]
     [HttpPost]
     public IActionResult RequestPromotion([FromBody] FootballerDto footballerDto)
     {
-        if (!ModelState.IsValid)
+        var validationResult = _footballerValidator.Validate(footballerDto);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Model state invalid");
+            return BadRequest(validationResult.Errors);
         }
 
         var (result, msg) = _promotionService.FootballerRequestPromotion(HttpContext, footballerDto);

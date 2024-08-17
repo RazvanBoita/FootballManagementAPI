@@ -1,9 +1,7 @@
-using System.ComponentModel;
-using System.Security.Claims;
+using FluentValidation;
 using FootballMgm.Api.Dtos;
 using FootballMgm.Api.Services.Announcement;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,10 +13,11 @@ namespace FootballMgm.Api.Controllers;
 public class AnnouncementController : ControllerBase
 {
     private readonly IAnnouncementService _announcementService;
-
-    public AnnouncementController(IAnnouncementService announcementService)
+    private readonly IValidator<AnnouncementDto> _announcementValidator;
+    public AnnouncementController(IAnnouncementService announcementService, IValidator<AnnouncementDto> announcementValidator)
     {
         _announcementService = announcementService;
+        _announcementValidator = announcementValidator;
     }
     
     
@@ -31,6 +30,12 @@ public class AnnouncementController : ControllerBase
     )]
     public IActionResult MakeAnnouncement([FromBody] AnnouncementDto announcementDto)
     {
+        var validationResult = _announcementValidator.Validate(announcementDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+        
         var result = _announcementService.ProcessAnnouncement(HttpContext, announcementDto.Content);
         return StatusCode(result.Item1, new {message = result.Item2});
     }

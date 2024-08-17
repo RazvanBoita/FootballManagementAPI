@@ -1,6 +1,8 @@
+using FluentValidation;
 using FootballMgm.Api.Data;
 using FootballMgm.Api.Dtos;
 using FootballMgm.Api.Services;
+using FootballMgm.Api.Validators.FootballValidators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,20 +12,24 @@ namespace FootballMgm.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly FootballDbContext _dbContext;
         private readonly AuthService _authService;
-
-        public AuthController(IConfiguration configuration, FootballDbContext dbContext, AuthService authService)
+        private readonly IValidator<AuthDto> _authValidator;
+        
+        public AuthController(AuthService authService, IValidator<AuthDto> authValidator)
         {
-            _configuration = configuration;
-            _dbContext = dbContext;
             _authService = authService;
+            _authValidator = authValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> Auth([FromBody] AuthDto authModel)
         {
+            var validationResult = _authValidator.Validate(authModel);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+            
             var result = await _authService.Signup(authModel);
             if (result.Sucess)
             {
